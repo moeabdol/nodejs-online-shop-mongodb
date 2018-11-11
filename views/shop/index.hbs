@@ -9,12 +9,12 @@
             </h1>
           </header>
           <div class="card__image">
-            <img src="https://timedotcom.files.wordpress.com/2015/06/521811839-copy.jpg" alt="product image">
+            <img src="{{ this.imageURL }}" alt="{{ this.title }}">
           </div>
           <div class="card__content">
-            <h2 class="product__price">$19.99</h2>
+            <h2 class="product__price">${{ this.price }}</h2>
             <p class="product__description">
-              A very interesting book about some stuff.
+              {{ this.description }}
             </p>
           </div>
           <div class="card__actions">
