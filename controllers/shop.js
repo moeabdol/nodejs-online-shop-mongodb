@@ -12,7 +12,15 @@ const getCheckout = (req, res) => {
   });
 };
 
+const getOrders = (req, res) => {
+  res.render('shop/orders', {
+    pageTitle: 'Your Orders',
+    activeOrders: true
+  });
+};
+
 module.exports = {
   getCart,
-  getCheckout
+  getCheckout,
+  getOrders
 };
