@@ -42,15 +42,19 @@ class Cart {
       } else {
         const updatedCart = { ...cart };
         const product = updatedCart.products.find(p => p.id === id);
-        const productQuantity = product.quantity;
+        if (!product) {
+          return;
+        } else {
+          const productQuantity = product.quantity;
 
-        updatedCart.products = updatedCart.products.filter(p => p.id !== id);
-        updatedCart.totalPrice =
-          updatedCart.totalPrice - +productPrice * productQuantity;
+          updatedCart.products = updatedCart.products.filter(p => p.id !== id);
+          updatedCart.totalPrice =
+            updatedCart.totalPrice - +productPrice * productQuantity;
 
-        fs.writeFile(file, JSON.stringify(updatedCart), err => {
-          if (err) console.error(err);
-        });
+          fs.writeFile(file, JSON.stringify(updatedCart), err => {
+            if (err) console.error(err);
+          });
+        }
       }
     });
   }
