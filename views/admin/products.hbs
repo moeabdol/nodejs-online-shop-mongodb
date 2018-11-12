@@ -19,7 +19,7 @@
           </div>
           <div class="card__actions">
             <a href="/admin/products/{{ this.id }}/edit" class="btn">Edit</a>
-            <form action="/admin/delete-product" method="POST">
+            <form action="/admin/products/{{ this.id }}/delete" method="POST">
               <button class="btn" type="submit">Delete</button>
             </form>
           </div>
