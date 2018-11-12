@@ -47,9 +47,18 @@ const getOrders = (req, res) => {
   });
 };
 
+const postDeleteCartProduct = (req, res) => {
+  const productId = req.params.id;
+  Product.findById(productId, product => {
+    Cart.deleteProduct(productId, product.price);
+    res.redirect('/cart');
+  });
+};
+
 module.exports = {
   getCart,
   postCart,
   getCheckout,
-  getOrders
+  getOrders,
+  postDeleteCartProduct
 };

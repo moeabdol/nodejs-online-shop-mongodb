@@ -3,7 +3,12 @@
     <ul>
       {{#each products}}
         <li>
-          {{ this.product.title }} ({{ this.quantity }})
+          <p>
+            {{ this.product.title }} ({{ this.quantity }})
+          </p>
+          <form action="/cart/{{ this.product.id }}/delete" method="POST">
+            <button type="submit" class="btn">Delete</button>
+          </form>
         </li>
       {{/each}}
     </ul>
