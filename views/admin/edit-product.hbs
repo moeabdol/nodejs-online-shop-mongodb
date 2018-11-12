@@ -1,0 +1,25 @@
+<main>
+  <form action="/admin/products/{{ product.id }}" method="POST" class="product-form">
+    <div class="form-control">
+      <label for="title">Title</label>
+      <input id="title" type="text" name="title" value="{{ product.title }}"/>
+    </div>
+
+    <div class="form-control">
+      <label for="imageURL">Image URL</label>
+      <input id="imageURL" type="text" name="imageURL" value="{{ product.imageURL }}"/>
+    </div>
+
+    <div class="form-control">
+      <label for="price">Price</label>
+      <input id="price" type="number" name="price" step="0.01" value="{{ product.price}}"/>
+    </div>
+
+    <div class="form-control">
+      <label for="description">Description</label>
+      <textarea name="description" id="description" rows="5">{{ product.description}}</textarea>
+    </div>
+
+    <button type="submit">Update Product</button>
+  </form>
+</main>
