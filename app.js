@@ -5,6 +5,8 @@ const hbs        = require('express-handlebars');
 
 const errorsController = require('./controllers/errors');
 const sequelize        = require('./utils/database');
+const User             = require('./models/user');
+const Product          = require('./models/product');
 
 const app = express();
 
@@ -24,6 +26,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorsController.get404);
+
+User.hasMany(Product);
+Product.belongsTo(User, {
+  constraints: true,
+  onDelete: 'CASCADE'
+});
 
 sequelize
   .sync()
