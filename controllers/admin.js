@@ -11,12 +11,16 @@ const getAddProduct = (req, res) => {
 
 const postAddProduct = (req, res) => {
   const title       = req.body.title;
-  const imageURL    = req.body.imageURL;
-  const description = req.body.description;
   const price       = req.body.price;
-  const product     = new Product(null, title, imageURL, description, price);
-  product.save()
-    .then(() => res.redirect('/'))
+  const description = req.body.description;
+  const imageUrl    = req.body.imageUrl;
+
+  Product.create({
+    title,
+    price,
+    description,
+    imageUrl
+  }).then(() => res.redirect('/admin/products'))
     .catch(err => console.error(err));
 };
 
