@@ -15,7 +15,7 @@ const postAddProduct = (req, res) => {
   const description = req.body.description;
   const imageUrl    = req.body.imageUrl;
 
-  Product.create({
+  req.user.createProduct({
     title,
     price,
     description,
