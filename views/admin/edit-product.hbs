@@ -6,18 +6,18 @@
     </div>
 
     <div class="form-control">
-      <label for="imageURL">Image URL</label>
-      <input id="imageURL" type="text" name="imageURL" value="{{ product.imageURL }}"/>
+      <label for="imageUrl">Image URL</label>
+      <input id="imageUrl" type="text" name="imageUrl" value="{{ product.imageUrl }}"/>
     </div>
 
     <div class="form-control">
       <label for="price">Price</label>
-      <input id="price" type="number" name="price" step="0.01" value="{{ product.price}}"/>
+      <input id="price" type="number" name="price" step="0.01" value="{{ product.price }}"/>
     </div>
 
     <div class="form-control">
       <label for="description">Description</label>
-      <textarea name="description" id="description" rows="5">{{ product.description}}</textarea>
+      <textarea name="description" id="description" rows="5">{{ product.description }}</textarea>
     </div>
 
     <button type="submit">Update Product</button>

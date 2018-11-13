@@ -40,25 +40,35 @@ const getProducts = (req, res) => {
 
 const getEditProduct = (req, res) => {
   const productId = req.params.id;
-  Product.findById(productId, product => {
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      productCSS: true,
-      formsCSS: true,
-      product: product
-    });
-  });
+  Product.findByPk(productId)
+    .then(product => {
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        productCSS: true,
+        formsCSS: true,
+        product: product
+      });
+    })
+    .catch(err => console.error(err));
 };
 
 const postEditProduct = (req, res) => {
-  const id          = req.params.id;
+  const productId   = req.params.id;
   const title       = req.body.title;
-  const imageURL    = req.body.imageURL;
   const price       = req.body.price;
   const description = req.body.description;
-  const product     = new Product(id, title, imageURL, description, price);
-  product.save();
-  res.redirect('/admin/products');
+  const imageUrl    = req.body.imageUrl;
+
+  Product.findByPk(productId)
+    .then(product => {
+      product.title       = title;
+      product.price       = price;
+      product.description = description;
+      product.imageUrl    = imageUrl;
+      return product.save();
+    })
+    .then(() => res.redirect('/admin/products'))
+    .catch(err => console.error(err));
 };
 
 const postDeleteProduct = (req, res) => {
