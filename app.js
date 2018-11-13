@@ -13,6 +13,15 @@ const app = express();
 const adminRoutes = require('./routes/admin');
 const shopRoutes  = require('./routes/shop');
 
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.error(err));
+});
+
 app.engine('hbs', hbs({
   layoutsDir: 'views/layouts',
   defaultLayout: 'main',
@@ -35,5 +44,15 @@ Product.belongsTo(User, {
 
 sequelize
   .sync()
+  .then(() => User.findByPk(1))
+  .then(user => {
+    if (!user) {
+      User.create({
+        name: 'Mohammad',
+        email: 'mohd.a.saed@gmail.com'
+      });
+    }
+    return user;
+  })
   .then(() => app.listen(3000))
   .catch(err => console.error(err));
