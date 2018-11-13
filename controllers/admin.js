@@ -15,8 +15,9 @@ const postAddProduct = (req, res) => {
   const description = req.body.description;
   const price       = req.body.price;
   const product     = new Product(null, title, imageURL, description, price);
-  product.save();
-  res.redirect('/');
+  product.save()
+    .then(() => res.redirect('/'))
+    .catch(err => console.error(err));
 };
 
 const getProducts = (req, res) => {
