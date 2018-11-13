@@ -25,15 +25,17 @@ const postAddProduct = (req, res) => {
 };
 
 const getProducts = (req, res) => {
-  Product.fetchAll(products => {
-    res.render('admin/products', {
-      pageTitle: 'Admin Products',
-      prods: products,
-      hasProducts: products.length > 0,
-      activeAdminProducts: true,
-      productCSS: true
-    });
-  });
+  Product.findAll()
+    .then(products => {
+      res.render('admin/products', {
+        pageTitle: 'Admin Products',
+        prods: products,
+        hasProducts: products.length > 0,
+        activeAdminProducts: true,
+        productCSS: true
+      });
+    })
+    .catch(err => console.error(err));
 };
 
 const getEditProduct = (req, res) => {
