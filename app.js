@@ -51,12 +51,13 @@ sequelize
   .then(() => User.findByPk(1))
   .then(user => {
     if (!user) {
-      User.create({
+      return User.create({
         name: 'Mohammad',
         email: 'mohd.a.saed@gmail.com'
       });
     }
     return user;
   })
+  .then(user => user.createCart())
   .then(() => app.listen(3000))
   .catch(err => console.error(err));
