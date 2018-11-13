@@ -25,7 +25,8 @@ const postAddProduct = (req, res) => {
 };
 
 const getProducts = (req, res) => {
-  Product.findAll()
+  req.user
+    .getProducts()
     .then(products => {
       res.render('admin/products', {
         pageTitle: 'Admin Products',
@@ -40,8 +41,15 @@ const getProducts = (req, res) => {
 
 const getEditProduct = (req, res) => {
   const productId = req.params.id;
-  Product.findByPk(productId)
-    .then(product => {
+  req.user
+    .getProducts({ where: { id: productId }})
+    .then(products => {
+      let product;
+      if (products.length > 0) {
+        product = products[0];
+      } else {
+        product = null;
+      }
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',
         productCSS: true,
