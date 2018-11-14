@@ -84,21 +84,22 @@ const postDeleteCartProduct = (req, res) => {
 };
 
 const postOrder = (req, res) => {
+  let cartProducts;
+
   req.user
     .getCart()
     .then(cart => cart.getProducts())
     .then(products => {
-      req.user
-        .createOrder()
-        .then(order => {
-          return order.addProducts(
-            products.map(product => {
-              product.orderItem = { quantity: product.cartItem.quantity };
-              return product;
-            })
-          );
+      cartProducts = products;
+      return req.user.createOrder();
+    })
+    .then(order => {
+      return order.addProducts(
+        cartProducts.map(product => {
+          product.orderItem = { quantity: product.cartItem.quantity };
+          return product;
         })
-        .catch(err => console.error(err));
+      );
     })
     .then(() => res.redirect('/orders'))
     .catch(err => console.error(err));
