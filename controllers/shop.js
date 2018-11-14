@@ -57,10 +57,17 @@ const getCheckout = (req, res) => {
 };
 
 const getOrders = (req, res) => {
-  res.render('shop/orders', {
-    pageTitle: 'Your Orders',
-    activeOrders: true
-  });
+  req.user
+    .getOrders({ include: ['products'] })
+    .then(orders => {
+      res.render('shop/orders', {
+        pageTitle: 'Your Orders',
+        activeOrders: true,
+        orders: orders,
+        hasOrders: orders.length > 0
+      });
+    })
+    .catch(err => console.error(err));
 };
 
 const postDeleteCartProduct = (req, res) => {
@@ -85,10 +92,14 @@ const postDeleteCartProduct = (req, res) => {
 
 const postOrder = (req, res) => {
   let cartProducts;
+  let fetchedCart;
 
   req.user
     .getCart()
-    .then(cart => cart.getProducts())
+    .then(cart => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
     .then(products => {
       cartProducts = products;
       return req.user.createOrder();
@@ -101,6 +112,7 @@ const postOrder = (req, res) => {
         })
       );
     })
+    .then(() => fetchedCart.setProducts(null))
     .then(() => res.redirect('/orders'))
     .catch(err => console.error(err));
 };
