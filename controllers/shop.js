@@ -9,6 +9,7 @@ const getCart = (req, res) => {
       res.render('shop/cart', {
         pageTitle: 'Your Cart',
         activeCart: true,
+        cartCSS: true,
         products: products,
         hasProducts: products.length > 0
       });
@@ -19,6 +20,8 @@ const getCart = (req, res) => {
 const postCart = (req, res) => {
   const productId = req.body.productId;
   let fetchedCart;
+  let newQuantity = 1;
+
   req.user
     .getCart()
     .then(cart => {
@@ -27,19 +30,21 @@ const postCart = (req, res) => {
     })
     .then(products => {
       let product;
-      let newQuantity = 1;
       if (products.length > 0) {
         product = products[0];
       }
       if (product) {
-        // ..
+        const oldQuantity = product.cartItem.quantity;
+        newQuantity = oldQuantity + 1;
+        return product;
       } else {
-        return Product.findByPk(productId)
-          .then(product => {
-            return fetchedCart.addProduct(product, { through: { quantity: 1 }});
-          })
-          .catch(err => console.error(err));
+        return Product.findByPk(productId);
       }
+    })
+    .then(product => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity }
+      });
     })
     .then(() => res.redirect('/cart'))
     .catch(err => console.error(err));
