@@ -83,10 +83,32 @@ const postDeleteCartProduct = (req, res) => {
     .catch(err => console.error(err));
 };
 
+const postOrder = (req, res) => {
+  req.user
+    .getCart()
+    .then(cart => cart.getProducts())
+    .then(products => {
+      req.user
+        .createOrder()
+        .then(order => {
+          return order.addProducts(
+            products.map(product => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch(err => console.error(err));
+    })
+    .then(() => res.redirect('/orders'))
+    .catch(err => console.error(err));
+};
+
 module.exports = {
   getCart,
   postCart,
   getCheckout,
   getOrders,
-  postDeleteCartProduct
+  postDeleteCartProduct,
+  postOrder
 };

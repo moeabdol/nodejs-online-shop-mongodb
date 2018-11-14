@@ -43,7 +43,7 @@ app.use(errorsController.get404);
 User.hasMany(Product);
 User.hasOne(Cart);
 User.hasMany(Order);
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+Product.belongsTo(User);
 Product.belongsToMany(Cart, { through: CartItem });
 Product.belongsToMany(Order, { through: OrderItem });
 Cart.belongsTo(User);
@@ -51,27 +51,28 @@ Cart.belongsToMany(Product, { through: CartItem });
 Order.belongsTo(User);
 Order.belongsToMany(Product, { through: OrderItem });
 
+let incomingUser;
 sequelize
   // .sync({ force: true })
   .sync()
   .then(() => User.findByPk(1))
   .then(user => {
     if (!user) {
-      return User.create({
-        name: 'Mohammad',
-        email: 'mohd.a.saed@gmail.com'
-      });
+      return User.create({ name: 'Mohammad', email: 'mohd.a.saed@gmail.com' });
     }
     return user;
   })
   .then(user => {
-    user
-      .getCart()
-      .then(cart => {
-        if (cart) return cart;
-        return user.createCart();
-      })
-      .catch(err => console.error(err));
+    incomingUser = user;
+    return user.getCart();
   })
-  .then(() => app.listen(3000))
+  .then(cart => {
+    if (!cart) {
+      return incomingUser.createCart();
+    }
+    return cart;
+  })
+  .then(() => {
+    app.listen(3000, () => console.log('Server listening on port 3000'));
+  })
   .catch(err => console.error(err));

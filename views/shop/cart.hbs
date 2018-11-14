@@ -11,6 +11,12 @@
         </li>
       {{/each}}
     </ul>
+    <br />
+    <div class="centered">
+      <form action="/orders" method="POST">
+        <button type="submit" class="btn">Order Now!</button>
+      </form>
+    </div>
   {{else}}
     <h1>No products in cart!</h1>
   {{/if}}
