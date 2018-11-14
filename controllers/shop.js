@@ -1,5 +1,4 @@
 const Product = require('../models/product');
-const Cart    = require('../models/cart');
 
 const getCart = (req, res) => {
   req.user
@@ -66,10 +65,22 @@ const getOrders = (req, res) => {
 
 const postDeleteCartProduct = (req, res) => {
   const productId = req.params.id;
-  Product.findById(productId, product => {
-    Cart.deleteProduct(productId, product.price);
-    res.redirect('/cart');
-  });
+  req.user
+    .getCart()
+    .then(cart => {
+      return cart.getProducts({ where: { id: productId }});
+    })
+    .then(products => {
+      let product;
+      if (products.length > 0) {
+        product = products[0];
+        return product.cartItem.destroy();
+      } else {
+        return;
+      }
+    })
+    .then(() => res.redirect('/cart'))
+    .catch(err => console.error(err));
 };
 
 module.exports = {
