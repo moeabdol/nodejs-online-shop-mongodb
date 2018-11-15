@@ -5,7 +5,9 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 const mongoConnect = cb => {
-  MongoClient.connect('mongodb://localhost:27017/online_shop_development')
+  MongoClient.connect('mongodb://localhost:27017/online_shop_development', {
+    useNewUrlParser: true
+  })
     .then(client => {
       console.log('Connected to MongoDB');
       _db = client.db();
