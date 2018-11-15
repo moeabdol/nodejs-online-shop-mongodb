@@ -1,10 +1,14 @@
-const Sequelize = require('sequelize');
+const mongodb = require('mongodb');
 
-const sequelize = new Sequelize('online_shop', 'moeabdol', '12345678', {
-  host: 'localhost',
-  dialect: 'mysql',
-  logging: false,
-  operatorsAliases: false
-});
+const MongoClient = mongodb.MongoClient;
 
-module.exports = sequelize;
+const mongoConnect = cb => {
+  MongoClient.connect('mongodb://localhost:27017/online_shop_development')
+    .then(client => {
+      console.log('Connected to MongoDB');
+      cb(client);
+    })
+    .catch(err => console.error(err));
+};
+
+module.exports = mongoConnect;
