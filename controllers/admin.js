@@ -30,7 +30,7 @@ const postAddProduct = (req, res) => {
 
 const getProducts = (req, res) => {
   Product
-    .fetchAll()
+    .find()
     .then(products => {
       res.render('admin/products', {
         pageTitle: 'Admin Products',
@@ -68,11 +68,15 @@ const postEditProduct = (req, res) => {
   const description = req.body.description;
   const imageUrl    = req.body.imageUrl;
 
-  const product = new Product(title, price, description, imageUrl,
-    productId);
-
-  product
-    .save()
+  Product
+    .findById(productId)
+    .then(product => {
+      product.title       = title;
+      product.price       = price;
+      product.description = description;
+      product.imageUrl    = imageUrl;
+      return product.save();
+    })
     .then(() => res.redirect('/admin/products'))
     .catch(err => console.error(err));
 };
