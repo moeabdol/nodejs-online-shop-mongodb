@@ -2,9 +2,9 @@ const path       = require('path');
 const express    = require('express');
 const bodyParser = require('body-parser');
 const hbs        = require('express-handlebars');
+const mongoose   = require('mongoose');
 
 const errorsController = require('./controllers/errors');
-const mongoConnect     = require('./utils/database').mongoConnect;
 
 const app = express();
 
@@ -34,6 +34,11 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorsController.get404);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose.connect('mongodb://localhost:27017/online_shop_development', {
+  useNewUrlParser: true
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(3000, () => console.log('Server listening on port 3000'));
+  })
+  .catch(err => console.error(err));
