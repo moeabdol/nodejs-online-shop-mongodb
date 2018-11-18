@@ -19,7 +19,8 @@ const postAddProduct = (req, res) => {
     title,
     price,
     description,
-    imageUrl
+    imageUrl,
+    userId: req.user  // mongoose will conveniently pick _id from the user object
   });
 
   newProduct
