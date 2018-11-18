@@ -11,14 +11,16 @@ const app = express();
 const adminRoutes = require('./routes/admin');
 const shopRoutes  = require('./routes/shop');
 
-// app.use((req, res, next) => {
-//   User.findByPk(1)
-//     .then(user => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch(err => console.error(err));
-// });
+const User = require('./models/user');
+
+app.use((req, res, next) => {
+  User.findOne()
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.error(err));
+});
 
 app.engine('hbs', hbs({
   layoutsDir: 'views/layouts',
@@ -37,7 +39,19 @@ app.use(errorsController.get404);
 mongoose.connect('mongodb://localhost:27017/online_shop_development', {
   useNewUrlParser: true
 })
-  .then(() => {
+  .then(() => User.findOne())
+  .then(user => {
+    if (!user) {
+      const newUser = User({
+        name: 'Mohammad',
+        email: 'mohd.a.saed@gmail.com',
+        cart: {
+          item: []
+        }
+      });
+      newUser.save();
+    }
+
     console.log('Connected to MongoDB');
     app.listen(3000, () => console.log('Server listening on port 3000'));
   })
