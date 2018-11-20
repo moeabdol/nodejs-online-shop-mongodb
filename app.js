@@ -10,6 +10,7 @@ const app = express();
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes  = require('./routes/shop');
+const authRoutes  = require('./routes/auth');
 
 const User = require('./models/user');
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 app.use(errorsController.get404);
 
 mongoose.connect('mongodb://localhost:27017/online_shop_development', {
