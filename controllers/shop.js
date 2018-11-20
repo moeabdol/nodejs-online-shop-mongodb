@@ -21,8 +21,9 @@ const postCart = (req, res) => {
   Product
     .findById(productId)
     .then(product => {
-      req.user.addToCart(product);
-      res.redirect('/cart');
+      req.user.addToCart(product, () => {
+        res.redirect('/cart');
+      });
     })
     .catch(err => console.error(err));
 };
@@ -51,9 +52,10 @@ const postCart = (req, res) => {
 const postDeleteCartProduct = (req, res) => {
   const productId = req.params.id;
   req.user
-    .removeFromCart(productId)
-    .then(() => res.redirect('/cart'))
-    .catch(err => console.error(err));
+    .removeFromCart(productId, err => {
+      if (err) return console.error(err);
+      res.redirect('/cart');
+    });
 };
 
 // const postOrder = (req, res) => {
