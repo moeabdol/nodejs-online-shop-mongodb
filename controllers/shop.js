@@ -5,7 +5,6 @@ const getCart = (req, res) => {
     .populate('cart.items.productId')
     .execPopulate()
     .then(user => {
-      console.log(user.cart.items);
       res.render('shop/cart', {
         pageTitle: 'Your Cart',
         activeCart: true,
@@ -19,7 +18,6 @@ const getCart = (req, res) => {
 
 const postCart = (req, res) => {
   const productId = req.body.productId;
-
   Product
     .findById(productId)
     .then(product => {
@@ -49,27 +47,15 @@ const postCart = (req, res) => {
 //     })
 //     .catch(err => console.error(err));
 // };
-//
-// const postDeleteCartProduct = (req, res) => {
-//   const productId = req.params.id;
-//   req.user
-//     .getCart()
-//     .then(cart => {
-//       return cart.getProducts({ where: { id: productId }});
-//     })
-//     .then(products => {
-//       let product;
-//       if (products.length > 0) {
-//         product = products[0];
-//         return product.cartItem.destroy();
-//       } else {
-//         return;
-//       }
-//     })
-//     .then(() => res.redirect('/cart'))
-//     .catch(err => console.error(err));
-// };
-//
+
+const postDeleteCartProduct = (req, res) => {
+  const productId = req.params.id;
+  req.user
+    .removeFromCart(productId)
+    .then(() => res.redirect('/cart'))
+    .catch(err => console.error(err));
+};
+
 // const postOrder = (req, res) => {
 //   let cartProducts;
 //   let fetchedCart;
@@ -102,6 +88,6 @@ module.exports = {
   postCart,
   // getCheckout,
   // getOrders,
-  // postDeleteCartProduct,
+  postDeleteCartProduct,
   // postOrder
 };
