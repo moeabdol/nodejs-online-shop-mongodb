@@ -6,7 +6,7 @@
           <h1>#{{ this.id }}</h1>
           <ul>
             {{#each this.products}}
-              <li>{{ this.title }} ({{ this.orderItem.quantity }})</li>
+              <li>{{ this.product.title }} ({{ this.quantity }})</li>
             {{/each}}
           </ul>
         </li>
