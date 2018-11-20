@@ -16,38 +16,17 @@ const Product = require('../models/product');
 //     .catch(err => console.error(err));
 // };
 
-// const postCart = (req, res) => {
-//   const productId = req.body.productId;
-//   let fetchedCart;
-//   let newQuantity = 1;
-//
-//   req.user
-//     .getCart()
-//     .then(cart => {
-//       fetchedCart = cart;
-//       return cart.getProducts({ where: { id: productId }});
-//     })
-//     .then(products => {
-//       let product;
-//       if (products.length > 0) {
-//         product = products[0];
-//       }
-//       if (product) {
-//         const oldQuantity = product.cartItem.quantity;
-//         newQuantity = oldQuantity + 1;
-//         return product;
-//       } else {
-//         return Product.findByPk(productId);
-//       }
-//     })
-//     .then(product => {
-//       return fetchedCart.addProduct(product, {
-//         through: { quantity: newQuantity }
-//       });
-//     })
-//     .then(() => res.redirect('/cart'))
-//     .catch(err => console.error(err));
-// };
+const postCart = (req, res) => {
+  const productId = req.body.productId;
+
+  Product
+    .findById(productId)
+    .then(product => {
+      req.user.addToCart(product);
+      res.redirect('/cart');
+    })
+    .catch(err => console.error(err));
+};
 
 // const getCheckout = (req, res) => {
 //   res.render('shop/checkout', {
@@ -119,7 +98,7 @@ const Product = require('../models/product');
 
 module.exports = {
   // getCart,
-  // postCart,
+  postCart,
   // getCheckout,
   // getOrders,
   // postDeleteCartProduct,
