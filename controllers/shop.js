@@ -1,20 +1,21 @@
 const Product = require('../models/product');
 
-// const getCart = (req, res) => {
-//   req.user
-//     .getCart()
-//     .then(cart => cart.getProducts())
-//     .then(products => {
-//       res.render('shop/cart', {
-//         pageTitle: 'Your Cart',
-//         activeCart: true,
-//         cartCSS: true,
-//         products: products,
-//         hasProducts: products.length > 0
-//       });
-//     })
-//     .catch(err => console.error(err));
-// };
+const getCart = (req, res) => {
+  req.user
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+      console.log(user.cart.items);
+      res.render('shop/cart', {
+        pageTitle: 'Your Cart',
+        activeCart: true,
+        cartCSS: true,
+        products: user.cart.items,
+        hasProducts: user.cart.items.length > 0
+      });
+    })
+    .catch(err => console.error(err));
+};
 
 const postCart = (req, res) => {
   const productId = req.body.productId;
@@ -97,7 +98,7 @@ const postCart = (req, res) => {
 // };
 
 module.exports = {
-  // getCart,
+  getCart,
   postCart,
   // getCheckout,
   // getOrders,
