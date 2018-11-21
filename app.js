@@ -1,12 +1,18 @@
-const path       = require('path');
-const express    = require('express');
-const bodyParser = require('body-parser');
-const hbs        = require('express-handlebars');
-const mongoose   = require('mongoose');
+const path         = require('path');
+const express      = require('express');
+const bodyParser   = require('body-parser');
+const hbs          = require('express-handlebars');
+const mongoose     = require('mongoose');
+const session      = require('express-session');
+const mongodbStore = require('connect-mongodb-session')(session);
 
 const errorsController = require('./controllers/errors');
 
-const app = express();
+const app   = express();
+const store = new mongodbStore({
+  uri:         'mongodb://localhost:27017/online_shop_development',
+  collection:  'sessions'
+});
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes  = require('./routes/shop');
@@ -32,6 +38,12 @@ app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret:             'my secret',
+  resave:             false,
+  saveUninitialized:  false,
+  store:              store
+}));
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

@@ -1,4 +1,5 @@
 const getLogin = (req, res) => {
+  console.log(req.session.isLoggedIn);
   res.render('auth/login', {
     pageTitle: 'Login',
     activeLogin: true,
@@ -7,6 +8,12 @@ const getLogin = (req, res) => {
   });
 };
 
+const postLogin = (req, res) => {
+  req.session.isLoggedIn = true;
+  res.redirect('/');
+};
+
 module.exports = {
-  getLogin
+  getLogin,
+  postLogin
 };

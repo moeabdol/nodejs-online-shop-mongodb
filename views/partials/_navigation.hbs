@@ -21,16 +21,19 @@
           Orders
         </a>
       </li>
-      <li class="main-header__item">
-        <a href="/admin/add-product" class="{{#if activeAddProduct}}active{{/if}}">
-          Add Product
-        </a>
-      </li>
-      <li class="main-header__item">
-        <a href="/admin/products" class="{{#if activeAdminProducts}}active{{/if}}">
-          Admin Products
-        </a>
-      </li>
+
+      {{#if isAuthenticated}}
+        <li class="main-header__item">
+          <a href="/admin/add-product" class="{{#if activeAddProduct}}active{{/if}}">
+            Add Product
+          </a>
+        </li>
+        <li class="main-header__item">
+          <a href="/admin/products" class="{{#if activeAdminProducts}}active{{/if}}">
+            Admin Products
+          </a>
+        </li>
+      {{/if}}
     </ul>
 
     <ul class="main-header__item-list">
