@@ -13,7 +13,15 @@ const postLogin = (req, res) => {
   res.redirect('/');
 };
 
+const postLogout = (req, res) => {
+  req.session.destroy(err => {
+    if (err) return console.error(err);
+    res.redirect('/');
+  });
+};
+
 module.exports = {
   getLogin,
-  postLogin
+  postLogin,
+  postLogout
 };
