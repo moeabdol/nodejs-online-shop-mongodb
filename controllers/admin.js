@@ -5,7 +5,8 @@ const getAddProduct = (req, res) => {
     pageTitle: 'Add Product',
     activeAddProduct: true,
     productCSS: true,
-    formsCSS: true
+    formsCSS: true,
+    isLoggedIn: req.session.isLoggedIn
   });
 };
 
@@ -38,7 +39,8 @@ const getProducts = (req, res) => {
         prods: products,
         hasProducts: products.length > 0,
         activeAdminProducts: true,
-        productCSS: true
+        productCSS: true,
+        isLoggedIn: req.session.isLoggedIn
       });
     })
     .catch(err => console.error(err));
@@ -56,7 +58,8 @@ const getEditProduct = (req, res) => {
         pageTitle: 'Edit Product',
         productCSS: true,
         formsCSS: true,
-        product: product
+        product: product,
+        isLoggedIn: req.session.isLoggedIn
       });
     })
     .catch(err => console.error(err));

@@ -17,9 +17,11 @@
               {{ this.description }}
             </p>
           </div>
-          <div class="card__actions">
-            {{> _add-to-cart product=this}}
-          </div>
+          {{#if ../isLoggedIn}}
+            <div class="card__actions">
+              {{> _add-to-cart product=this}}
+            </div>
+          {{/if}}
         </article>
       {{/each}}
     </div>

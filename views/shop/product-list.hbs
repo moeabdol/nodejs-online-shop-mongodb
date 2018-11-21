@@ -17,9 +17,12 @@
               {{ this.description }}
             </p>
           </div>
+
           <div class="card__actions">
             <a href="/products/{{ this._id }}" class="btn">Details</a>
-            {{> _add-to-cart product=this}}
+            {{#if ../isLoggedIn}}
+              {{> _add-to-cart product=this}}
+            {{/if}}
           </div>
         </article>
       {{/each}}

@@ -6,5 +6,7 @@
   </div>
   <h2>${{ product.price }}</h2>
   <p>{{ product.description }}</p>
-  {{> _add-to-cart}}
+  {{#if isLoggedIn}}
+    {{> _add-to-cart}}
+  {{/if}}
 </main>

@@ -11,18 +11,20 @@
           Products
         </a>
       </li>
-      <li class="main-header__item">
-        <a href="/cart" class="{{#if activeCart}}active{{/if}}">
-          Cart
-        </a>
-      </li>
-      <li class="main-header__item">
-        <a href="/orders" class="{{#if activeOrders}}active{{/if}}">
-          Orders
-        </a>
-      </li>
 
-      {{#if isAuthenticated}}
+      {{#if isLoggedIn}}
+        <li class="main-header__item">
+          <a href="/cart" class="{{#if activeCart}}active{{/if}}">
+            Cart
+          </a>
+        </li>
+
+        <li class="main-header__item">
+          <a href="/orders" class="{{#if activeOrders}}active{{/if}}">
+            Orders
+          </a>
+        </li>
+
         <li class="main-header__item">
           <a href="/admin/add-product" class="{{#if activeAddProduct}}active{{/if}}">
             Add Product
@@ -37,14 +39,17 @@
     </ul>
 
     <ul class="main-header__item-list">
-      <li class="main-header__item">
-        <a href="/login" class="{{#if activeLogin}}active{{/if}}">Login</a>
-      </li>
-      <li class="main-header__item">
-        <form action="/logout" method="POST">
-          <button type="submit">Logout</button>
-        </form>
-      </li>
+      {{#if isLoggedIn}}
+        <li class="main-header__item">
+          <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </li>
+      {{else}}
+        <li class="main-header__item">
+          <a href="/login" class="{{#if activeLogin}}active{{/if}}">Login</a>
+        </li>
+      {{/if}}
     </ul>
   </nav>
 </header>
