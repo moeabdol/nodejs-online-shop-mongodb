@@ -56,18 +56,7 @@ mongoose.connect('mongodb://localhost:27017/online_shop_development', {
   useNewUrlParser: true
 })
   .then(() => User.findOne())
-  .then(user => {
-    if (!user) {
-      const newUser = User({
-        name: 'Mohammad',
-        email: 'mohd.a.saed@gmail.com',
-        cart: {
-          item: []
-        }
-      });
-      newUser.save();
-    }
-
+  .then(() => {
     console.log('Connected to MongoDB');
     app.listen(3000, () => console.log('Server listening on port 3000'));
   })

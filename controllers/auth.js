@@ -41,6 +41,22 @@ const getSignup = (req, res) => {
 };
 
 const postSignup = (req, res) => {
+  const email           = req.body.email;
+  const password        = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  User
+    .findOne({ email: email })
+    .then(user => {
+      if (user) return res.redirect('/signup');
+      const newUser = new User({
+        email,
+        password
+      });
+      return newUser.save();
+    })
+    .then(() => res.redirect('/login'))
+    .catch(err => console.error(err));
 };
 
 module.exports = {
