@@ -6,6 +6,7 @@
           Shop
         </a>
       </li>
+
       <li class="main-header__item">
         <a href="/products" class="{{#if activeProducts}}active{{/if}}">
           Products
@@ -48,6 +49,10 @@
       {{else}}
         <li class="main-header__item">
           <a href="/login" class="{{#if activeLogin}}active{{/if}}">Login</a>
+        </li>
+
+        <li class="main-header__item">
+          <a href="/signup" class="{{#if activeSignup}}active{{/if}}">Signup</a>
         </li>
       {{/if}}
     </ul>

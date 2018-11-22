@@ -30,8 +30,23 @@ const postLogout = (req, res) => {
   });
 };
 
+const getSignup = (req, res) => {
+  res.render('auth/signup', {
+    pageTitle: 'Signup',
+    activeSignup: true,
+    formsCSS: true,
+    authCSS: true,
+    isLoggedIn: false
+  });
+};
+
+const postSignup = (req, res) => {
+};
+
 module.exports = {
   getLogin,
   postLogin,
-  postLogout
+  postLogout,
+  getSignup,
+  postSignup
 };
