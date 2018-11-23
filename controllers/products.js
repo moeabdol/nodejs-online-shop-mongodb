@@ -8,8 +8,7 @@ const getIndex = (req, res) => {
         prods: products,
         hasProducts: products.length > 0,
         activeShop: true,
-        productCSS: true,
-        isLoggedIn: req.session.isLoggedIn
+        productCSS: true
       });
     })
     .catch(err => console.error(err));
@@ -23,8 +22,7 @@ const getProducts = (req, res) => {
         prods: products,
         hasProducts: products.length > 0,
         activeProducts: true,
-        productCSS: true,
-        isLoggedIn: req.session.isLoggedIn
+        productCSS: true
       });
     })
     .catch(err => console.error(err));
@@ -36,8 +34,7 @@ const getProduct = (req, res) => {
     .then(product => {
       res.render('shop/product-details', {
         pageTitle: product.title,
-        product: product,
-        isLoggedIn: req.session.isLoggedIn
+        product: product
       });
     })
     .catch(err => console.error(err));

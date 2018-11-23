@@ -5,10 +5,12 @@ const hbs          = require('express-handlebars');
 const mongoose     = require('mongoose');
 const session      = require('express-session');
 const mongodbStore = require('connect-mongodb-session')(session);
+const csurf        = require('csurf');
 
 const errorsController = require('./controllers/errors');
 
 const app   = express();
+const csrf  = csurf();
 const store = new mongodbStore({
   uri:         'mongodb://localhost:27017/online_shop_development',
   collection:  'sessions'
@@ -35,6 +37,7 @@ app.use(session({
   saveUninitialized:  false,
   store:              store
 }));
+app.use(csrf); // must be initialized after the session
 
 app.use((req, res, next) => {
   if (!req.session.user) return next();
@@ -46,6 +49,11 @@ app.use((req, res, next) => {
     .catch(err => console.error(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isLoggedIn = req.session.isLoggedIn;
+  res.locals.csrfToken  = req.csrfToken();
+  next();
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

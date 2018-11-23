@@ -1,5 +1,7 @@
 <main>
   <form action="/admin/add-product" method="POST" class="product-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
     <div class="form-control">
       <label for="title">Title</label>
       <input id="title" type="text" name="title" />

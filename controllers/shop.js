@@ -11,8 +11,7 @@ const getCart = (req, res) => {
         activeCart: true,
         cartCSS: true,
         products: user.cart.items,
-        hasProducts: user.cart.items.length > 0,
-        isLoggedIn: req.session.isLoggedIn
+        hasProducts: user.cart.items.length > 0
       });
     })
     .catch(err => console.error(err));
@@ -47,8 +46,7 @@ const getOrders = (req, res) => {
         pageTitle: 'Your Orders',
         activeOrders: true,
         orders: orders,
-        hasOrders: orders.length > 0,
-        isLoggedIn: req.session.isLoggedIn
+        hasOrders: orders.length > 0
       });
     })
     .catch(err => console.error(err));
@@ -79,7 +77,6 @@ const postOrder = (req, res) => {
       res.redirect('/orders');
     }))
     .catch(err => console.error(err));
-
 };
 
 module.exports = {

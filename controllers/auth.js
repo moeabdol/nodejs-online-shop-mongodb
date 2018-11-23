@@ -7,8 +7,7 @@ const getLogin = (req, res) => {
     pageTitle: 'Login',
     activeLogin: true,
     formsCSS: true,
-    authCSS: true,
-    isLoggedIn: req.session.isLoggedIn
+    authCSS: true
   });
 };
 
@@ -51,8 +50,7 @@ const getSignup = (req, res) => {
     pageTitle: 'Signup',
     activeSignup: true,
     formsCSS: true,
-    authCSS: true,
-    isLoggedIn: false
+    authCSS: true
   });
 };
 

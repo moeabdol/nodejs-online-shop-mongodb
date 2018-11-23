@@ -21,7 +21,7 @@
           <div class="card__actions">
             <a href="/products/{{ this._id }}" class="btn">Details</a>
             {{#if ../isLoggedIn}}
-              {{> _add-to-cart product=this}}
+              {{> _add-to-cart product=this csrfToken=../csrfToken}}
             {{/if}}
           </div>
         </article>
