@@ -1,4 +1,3 @@
-const bcrypt            = require('bcryptjs');
 const nodemailer        = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
@@ -100,10 +99,21 @@ const postSignup = (req, res) => {
     .catch(err => console.error(err));
 };
 
+const getReset = (req, res) => {
+  res.render('auth/reset_password', {
+    pageTitle: 'Reset Password',
+    activeLogin: true,
+    formsCSS: true,
+    authCSS: true,
+    errorMessage: req.flash('error')
+  });
+};
+
 module.exports = {
   getLogin,
   postLogin,
   postLogout,
   getSignup,
-  postSignup
+  postSignup,
+  getReset
 };
