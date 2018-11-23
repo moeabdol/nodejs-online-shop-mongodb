@@ -66,7 +66,7 @@ const postOrder = (req, res) => {
 
       const newOrder = new Order({
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user._id
         },
         products: products
