@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt   = require('bcryptjs');
+
+const SALT_FACTOR = 12;
 
 const Schema = mongoose.Schema;
 
@@ -28,6 +31,28 @@ const userSchema = new Schema({
     ]
   }
 });
+
+userSchema.pre('save', function(next) {
+  if (this.isModified('password') || this.isNew) {
+    bcrypt
+      .genSalt(SALT_FACTOR)
+      .then(salt => bcrypt.hash(this.password, salt))
+      .then(hashedPassword => {
+        this.password = hashedPassword;
+        next();
+      })
+      .catch(err => next(err));
+  } else {
+    next();
+  }
+});
+
+userSchema.methods.comparePassword = function(password, cb) {
+  bcrypt
+    .compare(password, this.password)
+    .then(isMatch => cb(null, isMatch))
+    .catch(err => cb(err));
+};
 
 userSchema.methods.addToCart = function(product, cb) {
   let newQuantity = 1;

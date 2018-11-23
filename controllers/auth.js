@@ -32,21 +32,20 @@ const postLogin = (req, res) => {
         return res.redirect('/login');
       }
 
-      bcrypt
-        .compare(password, user.password)
-        .then(doMatch => {
-          if (doMatch) {
-            req.session.isLoggedIn = true;
-            req.session.user = user;
-            return req.session.save(err => {
-              if (err) return console.error(err);
-              res.redirect('/');
-            });
-          }
-          req.flash('error', 'Invalid email and/or password');
-          res.redirect('/login');
-        })
-        .catch(err => console.error(err));
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) return console.error(err);
+        if (!isMatch) {
+          req.flash('error', 'Invalid email and/or password.');
+          return res.redirect('/login');
+        }
+
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        return req.session.save(err => {
+          if (err) return console.error(err);
+          res.redirect('/');
+        });
+      });
     })
     .catch(err => console.error(err));
 };
@@ -80,27 +79,23 @@ const postSignup = (req, res) => {
         req.flash('error', 'Email already exists!');
         return res.redirect('/signup');
       }
-      bcrypt
-        .hash(password, 12)
-        .then(hashedPassword => {
-          const newUser = new User({
-            email,
-            password: hashedPassword
-          });
-          newUser.save(err => {
-            if (err) return console.error(err);
-            transporter
-              .sendMail({
-                to: email,
-                from: 'node@online-shop.com',
-                subject: 'Signup Succeeded!',
-                html: '<h1>You have successfully signed up!</h1>'
-              })
-              .then(() => res.redirect('/login'))
-              .catch(err => console.error(err));
-          });
-        })
-        .catch(err => console.error(err));
+
+      const newUser = new User({
+        email,
+        password
+      });
+      newUser.save(err => {
+        if (err) return console.error(err);
+        transporter
+          .sendMail({
+            to: email,
+            from: 'node@online-shop.com',
+            subject: 'Signup Succeeded!',
+            html: '<h1>You have successfully signed up!</h1>'
+          })
+          .then(() => res.redirect('/login'))
+          .catch(err => console.error(err));
+      });
     })
     .catch(err => console.error(err));
 };
