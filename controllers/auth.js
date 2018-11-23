@@ -51,16 +51,20 @@ const postSignup = (req, res) => {
     .findOne({ email: email })
     .then(user => {
       if (user) return res.redirect('/signup');
-      return bcrypt.hash(password, 12);
+      bcrypt
+        .hash(password, 12)
+        .then(hashedPassword => {
+          const newUser = new User({
+            email,
+            password: hashedPassword
+          });
+          newUser.save(err => {
+            if (err) return console.error(err);
+            res.redirect('/login');
+          });
+        })
+        .catch(err => console.error(err));
     })
-    .then(hashedPassword => {
-      const newUser = new User({
-        email,
-        password: hashedPassword
-      });
-      return newUser.save();
-    })
-    .then(() => res.redirect('/login'))
     .catch(err => console.error(err));
 };
 
