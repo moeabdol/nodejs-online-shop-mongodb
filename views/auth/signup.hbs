@@ -1,4 +1,6 @@
 <main>
+  {{> _flash-message}}
+
   <form class="login-form" action="/signup" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 

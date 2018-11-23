@@ -6,6 +6,7 @@ const mongoose     = require('mongoose');
 const session      = require('express-session');
 const mongodbStore = require('connect-mongodb-session')(session);
 const csurf        = require('csurf');
+const flash        = require('connect-flash');
 
 const errorsController = require('./controllers/errors');
 
@@ -37,7 +38,8 @@ app.use(session({
   saveUninitialized:  false,
   store:              store
 }));
-app.use(csrf); // must be initialized after the session
+app.use(csrf);      // must be initialized after the session
+app.use(flash());   // must be initialized after the session
 
 app.use((req, res, next) => {
   if (!req.session.user) return next();
