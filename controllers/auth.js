@@ -148,6 +148,56 @@ const postReset = (req, res) => {
     });
 };
 
+const getNewPassword = (req, res) => {
+  const token = req.params.token;
+
+  User
+    .findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() }})
+    .then(user => {
+      if (!user) {
+        req.flash('error', 'Invalid token');
+        return res.redirect('/reset-password');
+      }
+      res.render('auth/new_password', {
+        pageTitle: 'New Password',
+        activeLogin: true,
+        formsCSS: true,
+        authCSS: true,
+        errorMessage: req.flash('error'),
+        userId: user._id,
+        token: token
+      });
+    })
+    .catch(err => console.error(err));
+};
+
+const postNewPassword = (req, res) => {
+  const newPassword = req.body.password;
+  const userId      = req.body.userId;
+  const token       = req.body.token;
+
+  User
+    .findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+      _id: userId
+    })
+    .then(user => {
+      if (!user) {
+        req.flash('error', 'Invalid token');
+        return res.redirect('/reset-password');
+      }
+      user.password = newPassword;
+      user.resetToken = null;
+      user.resetTokenExpiration = undefined;
+      user.save(err => {
+        if (err) return console.error(err);
+        res.redirect('/login');
+      });
+    })
+    .catch(err => console.error(err));
+};
+
 module.exports = {
   getLogin,
   postLogin,
@@ -155,5 +205,7 @@ module.exports = {
   getSignup,
   postSignup,
   getReset,
-  postReset
+  postReset,
+  getNewPassword,
+  postNewPassword
 };
