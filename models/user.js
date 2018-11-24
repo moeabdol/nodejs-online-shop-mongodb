@@ -29,7 +29,9 @@ const userSchema = new Schema({
         }
       }
     ]
-  }
+  },
+  resetToken: String,
+  resetTokenExpiration: Date
 });
 
 userSchema.pre('save', function(next) {
