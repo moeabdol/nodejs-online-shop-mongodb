@@ -31,7 +31,7 @@ const postAddProduct = (req, res) => {
 
 const getProducts = (req, res) => {
   Product
-    .find()
+    .find({ userId: req.user._id })
     .then(products => {
       res.render('admin/products', {
         pageTitle: 'Admin Products',
@@ -72,19 +72,24 @@ const postEditProduct = (req, res) => {
   Product
     .findById(productId)
     .then(product => {
+      if (product.userId !== req.user._id) {
+        return res.redirect('/');
+      }
       product.title       = title;
       product.price       = price;
       product.description = description;
       product.imageUrl    = imageUrl;
-      return product.save();
+      return product
+        .save()
+        .then(() => res.redirect('/admin/producrts'))
+        .catch(err => console.error(err));
     })
-    .then(() => res.redirect('/admin/products'))
     .catch(err => console.error(err));
 };
 
 const postDeleteProduct = (req, res) => {
   const productId = req.params.id;
-  Product.findByIdAndRemove(productId)
+  Product.deleteOne({ _id: productId, userId: req.user._id })
     .then(() => res.redirect('/admin/products'))
     .catch(err => console.error(err));
 };
