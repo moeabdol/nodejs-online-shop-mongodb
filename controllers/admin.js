@@ -72,7 +72,7 @@ const postEditProduct = (req, res) => {
   Product
     .findById(productId)
     .then(product => {
-      if (product.userId !== req.user._id) {
+      if (product.userId.toString() !== req.user._id.toString()) {
         return res.redirect('/');
       }
       product.title       = title;
@@ -81,7 +81,7 @@ const postEditProduct = (req, res) => {
       product.imageUrl    = imageUrl;
       return product
         .save()
-        .then(() => res.redirect('/admin/producrts'))
+        .then(() => res.redirect('/admin/products'))
         .catch(err => console.error(err));
     })
     .catch(err => console.error(err));
