@@ -69,7 +69,8 @@ const getSignup = (req, res) => {
       email: '',
       password: '',
       confirmPassword: ''
-    }
+    },
+    validationErrors: []
   });
 };
 
@@ -89,7 +90,10 @@ const postSignup = (req, res) => {
         email,
         password,
         confirmPassword: req.body.confirmPassword
-      }
+      },
+      emailError: errors.array().find(e => e.param === 'email'),
+      passwordError: errors.array().find(e => e.param === 'password'),
+      confirmPasswordError: errors.array().find(e => e.param === 'confirmPassword')
     });
   }
 
