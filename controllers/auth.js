@@ -64,7 +64,12 @@ const getSignup = (req, res) => {
     activeSignup: true,
     formsCSS: true,
     authCSS: true,
-    errorMessage: req.flash('error')
+    errorMessage: req.flash('error'),
+    oldInput: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }
   });
 };
 
@@ -79,7 +84,12 @@ const postSignup = (req, res) => {
       activeSignup: true,
       formsCSS: true,
       authCSS: true,
-      errorMessage: errors.array()[0].msg
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email,
+        password,
+        confirmPassword: req.body.confirmPassword
+      }
     });
   }
 
