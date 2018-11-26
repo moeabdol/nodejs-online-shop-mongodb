@@ -1,6 +1,7 @@
-const crypto            = require('crypto');
-const nodemailer        = require('nodemailer');
-const sendgridTransport = require('nodemailer-sendgrid-transport');
+const crypto               = require('crypto');
+const nodemailer           = require('nodemailer');
+const sendgridTransport    = require('nodemailer-sendgrid-transport');
+const { validationResult } = require('express-validator/check');
 
 const User = require('../models/user');
 
@@ -68,9 +69,21 @@ const getSignup = (req, res) => {
 };
 
 const postSignup = (req, res) => {
+  console.log('inside here');
   const email           = req.body.email;
   const password        = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const errors          = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/signup', {
+      pageTitle: 'Signup',
+      activeSignup: true,
+      formsCSS: true,
+      authCSS: true,
+      errorMessage: errors.array()[0].msg
+    });
+  }
 
   User
     .findOne({ email: email })
