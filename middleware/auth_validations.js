@@ -1,9 +1,9 @@
-const { check } = require('express-validator/check');
+const { body } = require('express-validator/check');
 
 const postSignupValidation = () => {
   const validators = [];
 
-  const emailValidator = check('email')
+  const emailValidator = body('email')
     .isEmail()
     .withMessage('Please enter a valid email')
     .custom(value => {
@@ -13,13 +13,22 @@ const postSignupValidation = () => {
       return true;
     });
 
-  const passwordValidator = check('password',
+  const passwordValidator = body('password',
     'Please enter a password that is alphanumeric and at least 5 characters long')
     .isLength({ min: 5 })
     .isAlphanumeric();
 
+  const confirmPasswordValidator = body('confirmPassword')
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error('Passwords have to match');
+      }
+      return true;
+    });
+
   validators.push(emailValidator);
   validators.push(passwordValidator);
+  validators.push(confirmPasswordValidator);
 
   return validators;
 };

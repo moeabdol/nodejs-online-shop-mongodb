@@ -69,11 +69,9 @@ const getSignup = (req, res) => {
 };
 
 const postSignup = (req, res) => {
-  console.log('inside here');
-  const email           = req.body.email;
-  const password        = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-  const errors          = validationResult(req);
+  const email    = req.body.email;
+  const password = req.body.password;
+  const errors   = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(422).render('auth/signup', {
