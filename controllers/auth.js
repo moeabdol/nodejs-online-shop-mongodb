@@ -17,27 +17,66 @@ const getLogin = (req, res) => {
     activeLogin: true,
     formsCSS: true,
     authCSS: true,
-    errorMessage: req.flash('error')
+    errorMessage: req.flash('error'),
+    oldInput: {
+      email: '',
+      password: ''
+    }
   });
 };
 
 const postLogin = (req, res) => {
   const email    = req.body.email;
   const password = req.body.password;
+  const errors   = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/login', {
+      pageTitle: 'Login',
+      activeLogin: true,
+      formsCSS: true,
+      authCSS: true,
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email,
+        password
+      },
+      emailError: errors.array().find(e => e.param === 'email'),
+      passwordError: errors.array().find(e => e.param === 'password')
+    });
+  }
 
   User
     .findOne({ email })
     .then(user => {
       if (!user) {
-        req.flash('error', 'Invalid email and/or password');
-        return res.redirect('/login');
+        return res.status(422).render('auth/login', {
+          pageTitle: 'Login',
+          activeLogin: true,
+          formsCSS: true,
+          authCSS: true,
+          errorMessage: 'Invalid email and/or password!',
+          oldInput: {
+            email,
+            password
+          }
+        });
       }
 
       user.comparePassword(password, (err, isMatch) => {
         if (err) return console.error(err);
         if (!isMatch) {
-          req.flash('error', 'Invalid email and/or password.');
-          return res.redirect('/login');
+          return res.status(422).render('auth/login', {
+            pageTitle: 'Login',
+            activeLogin: true,
+            formsCSS: true,
+            authCSS: true,
+            errorMessage: 'Invalid email and/or password!',
+            oldInput: {
+              email,
+              password
+            }
+          });
         }
 
         req.session.isLoggedIn = true;

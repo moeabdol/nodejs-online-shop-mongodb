@@ -19,12 +19,14 @@ const postSignupValidation = () => {
         .then(user => {
           if (user) return Promise.reject('Email already exists!');
         });
-    });
+    })
+    .normalizeEmail({ gmail_remove_dots: false });
 
   const passwordValidator = body('password',
     'Please enter a password that is alphanumeric and at least 5 characters long')
     .isLength({ min: 5 })
-    .isAlphanumeric();
+    .isAlphanumeric()
+    .trim();
 
   const confirmPasswordValidator = body('confirmPassword')
     .custom((value, { req }) => {
@@ -32,7 +34,8 @@ const postSignupValidation = () => {
         throw new Error('Passwords have to match');
       }
       return true;
-    });
+    })
+    .trim();
 
   validators.push(emailValidator);
   validators.push(passwordValidator);
@@ -41,6 +44,27 @@ const postSignupValidation = () => {
   return validators;
 };
 
+const postLoginValidation = () => {
+  const validators = [];
+
+  const emailValidator = body('email')
+    .isEmail()
+    .withMessage('Please enter a valid email address!')
+    .normalizeEmail({ gmail_remove_dots: false });
+
+  const passwordValidator = body('password',
+    'Please enter a password that is alphanumeric and at least 5 characters long')
+    .isLength({ min: 5 })
+    .isAlphanumeric()
+    .trim();
+
+  validators.push(emailValidator);
+  validators.push(passwordValidator);
+
+  return validators;
+};
+
 module.exports = {
-  postSignupValidation
+  postSignupValidation,
+  postLoginValidation
 };
