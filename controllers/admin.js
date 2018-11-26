@@ -1,11 +1,20 @@
 const Product = require('../models/product');
 
+const { validationResult } = require('express-validator/check');
+
 const getAddProduct = (req, res) => {
   res.render('admin/add-product', {
     pageTitle: 'Add Product',
     activeAddProduct: true,
     productCSS: true,
-    formsCSS: true
+    formsCSS: true,
+    errorMessage: null,
+    oldInput: {
+      title: '',
+      imageUrl: '',
+      price: '',
+      description: ''
+    }
   });
 };
 
@@ -14,6 +23,23 @@ const postAddProduct = (req, res) => {
   const price       = req.body.price;
   const description = req.body.description;
   const imageUrl    = req.body.imageUrl;
+  const errors      = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('admin/add-product', {
+      pageTitle: 'Add Product',
+      activeAddProduct: true,
+      productCSS: true,
+      formsCSS: true,
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        title,
+        imageUrl,
+        price,
+        description
+      }
+    });
+  }
 
   const newProduct  = new Product({
     title,
@@ -56,7 +82,8 @@ const getEditProduct = (req, res) => {
         pageTitle: 'Edit Product',
         productCSS: true,
         formsCSS: true,
-        product: product
+        product: product,
+        errorMessage: null
       });
     })
     .catch(err => console.error(err));
@@ -68,6 +95,24 @@ const postEditProduct = (req, res) => {
   const price       = req.body.price;
   const description = req.body.description;
   const imageUrl    = req.body.imageUrl;
+  const errors      = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('admin/edit-product', {
+      pageTitle: 'Edit Product',
+      activeAddProduct: true,
+      productCSS: true,
+      formsCSS: true,
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        productId,
+        title,
+        imageUrl,
+        price,
+        description
+      }
+    });
+  }
 
   Product
     .findById(productId)

@@ -1,25 +1,27 @@
 <main>
-  <form action="/admin/products/{{ product._id }}" method="POST" class="product-form">
+  {{> _flash-message}}
+
+  <form action="/admin/products/{{#if product}}{{product._id}}{{else}}{{oldInput.productId}}{{/if}}" method="POST" class="product-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
     <div class="form-control">
       <label for="title">Title</label>
-      <input id="title" type="text" name="title" value="{{ product.title }}"/>
+      <input id="title" type="text" name="title" value="{{#if product}}{{product.title}}{{else}}{{oldInput.title}}{{/if}}"/>
     </div>
 
     <div class="form-control">
       <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" type="text" name="imageUrl" value="{{ product.imageUrl }}"/>
+      <input id="imageUrl" type="text" name="imageUrl" value="{{#if product}}{{product.imageUrl}}{{else}}{{oldInput.imageUrl}}{{/if}}"/>
     </div>
 
     <div class="form-control">
       <label for="price">Price</label>
-      <input id="price" type="number" name="price" step="0.01" value="{{ product.price }}"/>
+      <input id="price" type="number" name="price" step="0.01" value="{{#if product}}{{product.price}}{{else}}{{oldInput.price}}{{/if}}"/>
     </div>
 
     <div class="form-control">
       <label for="description">Description</label>
-      <textarea name="description" id="description" rows="5">{{ product.description }}</textarea>
+      <textarea name="description" id="description" rows="5">{{#if product}}{{product.description}}{{else}}{{oldInput.description}}{{/if}}</textarea>
     </div>
 
     <button type="submit">Update Product</button>
