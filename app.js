@@ -47,10 +47,15 @@ app.use((req, res, next) => {
   if (!req.session.user) return next();
   User.findById(req.session.user._id)
     .then(user => {
+      if (!user) return next();
       req.user = user;
       next();
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
 });
 
 app.use((req, res, next) => {
@@ -62,7 +67,16 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+
+app.get('/500', errorsController.get500);
 app.use(errorsController.get404);
+
+app.use((err, req, res, next) => {
+  res.status(500).render('500', {
+    pageTitle: 'Error!',
+    isLoggedIn: req.session.isLoggedIn
+  });
+});
 
 mongoose.connect('mongodb://localhost:27017/online_shop_development', {
   useNewUrlParser: true

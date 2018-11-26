@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 
-const getIndex = (req, res) => {
+const getIndex = (req, res, next) => {
   Product.find()
     .then(products => {
       res.render('shop/index', {
@@ -11,10 +11,14 @@ const getIndex = (req, res) => {
         productCSS: true
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const getProducts = (req, res) => {
+const getProducts = (req, res, next) => {
   Product.find()
     .then(products => {
       res.render('shop/product-list', {
@@ -25,10 +29,14 @@ const getProducts = (req, res) => {
         productCSS: true
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const getProduct = (req, res) => {
+const getProduct = (req, res, next) => {
   const productId = req.params.productId;
   Product.findById(productId)
     .then(product => {
@@ -37,7 +45,11 @@ const getProduct = (req, res) => {
         product: product
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 module.exports = {

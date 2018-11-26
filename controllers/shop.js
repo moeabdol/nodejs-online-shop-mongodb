@@ -1,7 +1,7 @@
 const Product = require('../models/product');
 const Order   = require('../models/order');
 
-const getCart = (req, res) => {
+const getCart = (req, res, next) => {
   req.user
     .populate('cart.items.productId')
     .execPopulate()
@@ -14,10 +14,14 @@ const getCart = (req, res) => {
         hasProducts: user.cart.items.length > 0
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const postCart = (req, res) => {
+const postCart = (req, res, next) => {
   const productId = req.body.productId;
   Product
     .findById(productId)
@@ -26,7 +30,11 @@ const postCart = (req, res) => {
         res.redirect('/cart');
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 const postDeleteCartProduct = (req, res) => {
@@ -38,7 +46,7 @@ const postDeleteCartProduct = (req, res) => {
     });
 };
 
-const getOrders = (req, res) => {
+const getOrders = (req, res, next) => {
   Order
     .find({ 'user.userId': req.user._id })
     .then(orders => {
@@ -49,10 +57,14 @@ const getOrders = (req, res) => {
         hasOrders: orders.length > 0
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const postOrder = (req, res) => {
+const postOrder = (req, res, next) => {
   req.user
     .populate('cart.items.productId')
     .execPopulate()
@@ -76,7 +88,11 @@ const postOrder = (req, res) => {
     .then(() => req.user.clearCart(() => {
       res.redirect('/orders');
     }))
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 module.exports = {

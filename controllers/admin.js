@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const Product = require('../models/product');
 
 const { validationResult } = require('express-validator/check');
@@ -18,7 +20,7 @@ const getAddProduct = (req, res) => {
   });
 };
 
-const postAddProduct = (req, res) => {
+const postAddProduct = (req, res, next) => {
   const title       = req.body.title;
   const price       = req.body.price;
   const description = req.body.description;
@@ -42,6 +44,7 @@ const postAddProduct = (req, res) => {
   }
 
   const newProduct  = new Product({
+    _id: mongoose.Types.ObjectId('5bfa5b3a6fd2021ee7e9ead6'),
     title,
     price,
     description,
@@ -52,10 +55,14 @@ const postAddProduct = (req, res) => {
   newProduct
     .save()
     .then(() => res.redirect('/admin/products'))
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const getProducts = (req, res) => {
+const getProducts = (req, res, next) => {
   Product
     .find({ userId: req.user._id })
     .then(products => {
@@ -67,10 +74,14 @@ const getProducts = (req, res) => {
         productCSS: true
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const getEditProduct = (req, res) => {
+const getEditProduct = (req, res, next) => {
   const productId = req.params.id;
   Product
     .findById(productId)
@@ -86,10 +97,14 @@ const getEditProduct = (req, res) => {
         errorMessage: null
       });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const postEditProduct = (req, res) => {
+const postEditProduct = (req, res, next) => {
   const productId   = req.params.id;
   const title       = req.body.title;
   const price       = req.body.price;
@@ -129,14 +144,22 @@ const postEditProduct = (req, res) => {
         .then(() => res.redirect('/admin/products'))
         .catch(err => console.error(err));
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
-const postDeleteProduct = (req, res) => {
+const postDeleteProduct = (req, res, next) => {
   const productId = req.params.id;
   Product.deleteOne({ _id: productId, userId: req.user._id })
     .then(() => res.redirect('/admin/products'))
-    .catch(err => console.error(err));
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 module.exports = {
