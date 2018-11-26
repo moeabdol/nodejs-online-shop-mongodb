@@ -83,32 +83,22 @@ const postSignup = (req, res) => {
     });
   }
 
-  User
-    .findOne({ email: email })
-    .then(user => {
-      if (user) {
-        req.flash('error', 'Email already exists!');
-        return res.redirect('/signup');
-      }
-
-      const newUser = new User({
-        email,
-        password
-      });
-      newUser.save(err => {
-        if (err) return console.error(err);
-        transporter
-          .sendMail({
-            to: email,
-            from: 'node@online-shop.com',
-            subject: 'Signup Succeeded!',
-            html: '<h1>You have successfully signed up!</h1>'
-          })
-          .then(() => res.redirect('/login'))
-          .catch(err => console.error(err));
-      });
-    })
-    .catch(err => console.error(err));
+  const newUser = new User({
+    email,
+    password
+  });
+  newUser.save(err => {
+    if (err) return console.error(err);
+    transporter
+      .sendMail({
+        to: email,
+        from: 'node@online-shop.com',
+        subject: 'Signup Succeeded!',
+        html: '<h1>You have successfully signed up!</h1>'
+      })
+      .then(() => res.redirect('/login'))
+      .catch(err => console.error(err));
+  });
 };
 
 const getReset = (req, res) => {

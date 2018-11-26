@@ -1,5 +1,7 @@
 const { body } = require('express-validator/check');
 
+const User = require('../models/user');
+
 const postSignupValidation = () => {
   const validators = [];
 
@@ -7,10 +9,16 @@ const postSignupValidation = () => {
     .isEmail()
     .withMessage('Please enter a valid email')
     .custom(value => {
-      if (value === 'test@test.com') {
-        throw new Error('This email address is forbidden.');
-      }
-      return true;
+      // if (value === 'test@test.com') {
+      //   throw new Error('This email address is forbidden.');
+      // }
+      // return true;
+
+      return User
+        .findOne({ email: value })
+        .then(user => {
+          if (user) return Promise.reject('Email already exists!');
+        });
     });
 
   const passwordValidator = body('password',
