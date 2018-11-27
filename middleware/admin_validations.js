@@ -10,9 +10,9 @@ const postAddProductValidation = () => {
     .withMessage('Title must be at least 3 characters')
     .trim();
 
-  const imageUrlValidator = body('imageUrl')
-    .isURL()
-    .withMessage('Image URL must be a fully qualified URL');
+  // const imageUrlValidator = body('imageUrl')
+  //   .isURL()
+  //   .withMessage('Image URL must be a fully qualified URL');
 
   const priceValidator = body('price')
     .isFloat()
@@ -24,7 +24,7 @@ const postAddProductValidation = () => {
     .trim();
 
   validators.push(titleValidator);
-  validators.push(imageUrlValidator);
+  // validators.push(imageUrlValidator);
   validators.push(priceValidator);
   validators.push(descriptionValidator);
 

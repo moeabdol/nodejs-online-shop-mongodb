@@ -9,6 +9,7 @@ const session      = require('express-session');
 const mongodbStore = require('connect-mongodb-session')(session);
 const csurf        = require('csurf');
 const flash        = require('connect-flash');
+const multer       = require('multer');
 
 const errorsController = require('./controllers/errors');
 
@@ -25,6 +26,15 @@ const authRoutes  = require('./routes/auth');
 
 const User = require('./models/user');
 
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  }
+});
+
 app.engine('hbs', hbs({
   layoutsDir: 'views/layouts',
   defaultLayout: 'main',
@@ -33,6 +43,9 @@ app.engine('hbs', hbs({
 app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({
+  storage: multerStorage
+}).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret:             'my secret',
@@ -73,8 +86,7 @@ app.use(errorsController.get404);
 
 app.use((err, req, res, next) => {
   res.status(500).render('500', {
-    pageTitle: 'Error!',
-    isLoggedIn: req.session.isLoggedIn
+    pageTitle: 'Error!'
   });
 });
 
