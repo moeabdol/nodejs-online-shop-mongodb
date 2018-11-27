@@ -1,7 +1,8 @@
 <main>
   {{> _flash-message}}
 
-  <form action="/admin/products/{{#if product}}{{product._id}}{{else}}{{oldInput.productId}}{{/if}}" method="POST" class="product-form">
+  <form action="/admin/products/{{#if product}}{{product._id}}{{else}}{{oldInput.productId}}{{/if}}" method="POST"
+    class="product-form" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
     <div class="form-control">
@@ -9,9 +10,14 @@
       <input id="title" type="text" name="title" value="{{#if product}}{{product.title}}{{else}}{{oldInput.title}}{{/if}}"/>
     </div>
 
+    <!-- <div class="form&#45;control"> -->
+    <!--   <label for="imageUrl">Image URL</label> -->
+    <!--   <input id="imageUrl" type="text" name="imageUrl" value="{{#if product}}{{product.imageUrl}}{{else}}{{oldInput.imageUrl}}{{/if}}"/> -->
+    <!-- </div> -->
+
     <div class="form-control">
-      <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" type="text" name="imageUrl" value="{{#if product}}{{product.imageUrl}}{{else}}{{oldInput.imageUrl}}{{/if}}"/>
+      <label for="image">Image</label>
+      <input id="image" type="file" name="image" />
     </div>
 
     <div class="form-control">

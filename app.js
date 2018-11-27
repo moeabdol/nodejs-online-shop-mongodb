@@ -35,6 +35,16 @@ const multerStorage = multer.diskStorage({
   }
 });
 
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 app.engine('hbs', hbs({
   layoutsDir: 'views/layouts',
   defaultLayout: 'main',
@@ -44,7 +54,8 @@ app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({
-  storage: multerStorage
+  storage: multerStorage,
+  fileFilter: multerFilter
 }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({

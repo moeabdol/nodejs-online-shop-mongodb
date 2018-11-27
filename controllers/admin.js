@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Product = require('../models/product');
 
 const { validationResult } = require('express-validator/check');
@@ -24,10 +22,23 @@ const postAddProduct = (req, res, next) => {
   const title       = req.body.title;
   const price       = req.body.price;
   const description = req.body.description;
-  const imageUrl    = req.file;
+  const image       = req.file;
   const errors      = validationResult(req);
 
-  console.log(imageUrl);
+  if (!image) {
+    return res.status(422).render('admin/add-product', {
+      pageTitle: 'Add Product',
+      activeAddProduct: true,
+      productCSS: true,
+      formsCSS: true,
+      errorMessage: 'Attached file is not an image!',
+      oldInput: {
+        title,
+        price,
+        description
+      }
+    });
+  }
 
   if (!errors.isEmpty()) {
     return res.status(422).render('admin/add-product', {
@@ -38,15 +49,15 @@ const postAddProduct = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
       oldInput: {
         title,
-        imageUrl,
         price,
         description
       }
     });
   }
 
+  const imageUrl = image.path;
+
   const newProduct  = new Product({
-    _id: mongoose.Types.ObjectId('5bfa5b3a6fd2021ee7e9ead6'),
     title,
     price,
     description,
@@ -111,7 +122,7 @@ const postEditProduct = (req, res, next) => {
   const title       = req.body.title;
   const price       = req.body.price;
   const description = req.body.description;
-  const imageUrl    = req.body.imageUrl;
+  const image       = req.file;
   const errors      = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -124,7 +135,6 @@ const postEditProduct = (req, res, next) => {
       oldInput: {
         productId,
         title,
-        imageUrl,
         price,
         description
       }
@@ -140,11 +150,17 @@ const postEditProduct = (req, res, next) => {
       product.title       = title;
       product.price       = price;
       product.description = description;
-      product.imageUrl    = imageUrl;
-      return product
+      if (image) {
+        product.imageUrl = image.path;
+      }
+      product
         .save()
         .then(() => res.redirect('/admin/products'))
-        .catch(err => console.error(err));
+        .catch(err => {
+          const error = new Error(err);
+          error.httpStatusCode = 500;
+          return next(error);
+        });
     })
     .catch(err => {
       const error = new Error(err);
