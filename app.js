@@ -58,6 +58,7 @@ app.use(multer({
   fileFilter: multerFilter
 }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(session({
   secret:             'my secret',
   resave:             false,
